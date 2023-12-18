@@ -38,5 +38,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Test Docker Container') {
+            steps {
+                script {
+                    // Define Docker image name
+                    def dockerImageName = 'squigl300/myapp:v2'
+
+                    // Run a container from the image and execute a simple test command
+                    sh "docker run --rm ${dockerImageName} echo 'Container test successful'"
+                }
+            }
+        }
     }
 }
