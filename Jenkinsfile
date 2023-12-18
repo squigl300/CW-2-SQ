@@ -8,6 +8,7 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -16,6 +17,24 @@ pipeline {
                     
                     // Build the Docker image
                     docker.build(dockerImageName)
+                }
+            }
+        }
+
+        stage('Push Image to Docker Hub') {
+            steps {
+                script {
+                    def dockerImageName = 'squigl300/myapp:v2'
+                    
+                    // Log in to Docker Hub
+                    withCredentials([usernamePassword(docker-hub-credentials: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh "echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin"
+                    }
+
+                    // Push the image to Docker Hub
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        docker.image(dockerImageName).push()
+                    }
                 }
             }
         }
