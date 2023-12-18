@@ -50,5 +50,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // The ID of the SSH credentials added in Jenkins
+                    def sshCredentialsId = 'my-ssh-key'
+
+                    sshagent([sshCredentialsId]) {
+                        // updating Kubernetes deployment with the new image
+                        sh "kubectl set image deployment/myapp-deployment myapp=squigl300/myapp:v2 --record"
+                    }
+                }
+            }
+        }
     }
 }
