@@ -27,7 +27,7 @@ pipeline {
                     def dockerImageName = 'squigl300/myapp:v2'
                     
                     // Log in to Docker Hub
-                    withCredentials([usernamePassword(docker-hub-credentials: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
                         sh "echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin"
                     }
 
