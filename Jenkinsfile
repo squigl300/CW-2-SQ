@@ -1,6 +1,9 @@
 pipeline {
     agent any
-
+    environment {
+        // Add the path to the Jenkins environment for this pipeline
+        PATH = "/usr/local/bin:${env.PATH}"
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -51,18 +54,19 @@ pipeline {
             }
         }
 
-       stage('Deploy to Kubernetes') {
-        steps {
-            script {
-                // The ID of the SSH credentials added in Jenkins
-                def sshCredentialsId = 'my-ssh-key'
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // The ID of the SSH credentials added in Jenkins
+                    def sshCredentialsId = 'my-ssh-key'
 
-                sshagent([sshCredentialsId]) {
-                    // Use the full paths to kubectl and minikube
-                    sh "/usr/local/bin/kubectl set image deployment/myapp-deployment myapp=squigl300/myapp:v2 --record"
-                }
+                    sshagent([sshCredentialsId]) {
+                        // Use the full paths to kubectl and minikube
+                        sh "/usr/local/bin/kubectl set image deployment/myapp-deployment myapp=squigl300/myapp:v2 --record"
+                    }
                 }
             }
         }
     }
 }
+
