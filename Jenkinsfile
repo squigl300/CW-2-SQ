@@ -54,22 +54,21 @@ pipeline {
             }
         }
 
-     stage('Deploy to Kubernetes') {
-        steps {
-            script {
-                // The ID of the SSH credentials added in Jenkins
-                def sshCredentialsId = 'my-ssh-key'
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // The ID of the SSH credentials added in Jenkins
+                    def sshCredentialsId = 'my-ssh-key'
 
-                sshagent([sshCredentialsId]) {
-                    // Set the Kubernetes context
-                    sh "kubectl config use-context minikube"
+                    sshagent([sshCredentialsId]) {
+                        // Set the Kubernetes context
+                        sh "kubectl config use-context minikube"
 
-                    // Update the image in the Kubernetes deployment
-                    sh "/usr/local/bin/kubectl set image deployment/myapp-deployment myapp=squigl300/myapp:v2 --record"
-                }
+                        // Update the image in the Kubernetes deployment
+                        sh "/usr/local/bin/kubectl set image deployment/myapp-deployment myapp=squigl300/myapp:v2 --record"
+                    }
                 }
             }
         }
     }
 }
-
